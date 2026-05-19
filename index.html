@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My New Home Wishlist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #f7f4f0;
+      color: #1a1209;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #ede5db;
+      padding: 22px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header-icon { font-size: 1.8rem; }
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #7c4f2a;
+      letter-spacing: -0.02em;
+    }
+    header p { font-size: 0.78rem; color: #b0a090; margin-top: 2px; }
+
+    /* ── Page layout ── */
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+    }
+
+    /* ── Section ── */
+    .section-block { display: flex; flex-direction: column; gap: 18px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-icon {
+      width: 38px; height: 38px;
+      background: #f0e8df;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+    }
+    .section-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #7c4f2a;
+      letter-spacing: -0.01em;
+    }
+
+    .add-btn {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      border: none;
+      background: #7c4f2a;
+      color: #fff;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .add-btn:hover { background: #6b4022; transform: scale(1.07); }
+
+    /* ── Grid ── */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 12px;
+    }
+
+    /* ── Empty ── */
+    .empty {
+      padding: 24px 20px;
+      border: 1.5px dashed #d9cec4;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #c0b0a0;
+    }
+
+    /* ── Item card ── */
+    .item-card {
+      background: #fff;
+      border: 1px solid #ede5db;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.18s, box-shadow 0.18s;
+      animation: popIn 0.22s ease-out;
+    }
+    .item-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(124, 79, 42, 0.1);
+    }
+    .item-name  { font-size: 0.88rem; font-weight: 600; color: #1a1209; line-height: 1.35; }
+    .item-price { font-size: 0.9rem;  font-weight: 700; color: #7c4f2a; }
+
+    .card-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 6px;
+      align-items: center;
+    }
+    .btn-view {
+      flex: 1;
+      padding: 7px 0;
+      background: #7c4f2a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-view:hover { background: #6b4022; }
+    .btn-view.no-link {
+      background: #f0ece8;
+      color: #bbb;
+      cursor: default;
+    }
+    .btn-icon {
+      width: 30px; height: 30px;
+      border: none; border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-icon.edit   { background: #f0e8df; }
+    .btn-icon.edit:hover { background: #e4d5c7; }
+    .btn-icon.del    { background: #fdf0f0; }
+    .btn-icon.del:hover  { background: #fde0e0; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid #e8e0d8; }
+
+    /* ── Modal overlay ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(26,18,9,0.4);
+      backdrop-filter: blur(3px);
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .overlay.hidden { display: none; }
+
+    /* ── Modal box ── */
+    .modal {
+      background: #fff;
+      border-radius: 18px;
+      padding: 28px 26px 24px;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 16px 48px rgba(26,18,9,0.18);
+      animation: slideUp 0.2s ease-out;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .modal-header h2 { font-size: 1rem; font-weight: 700; color: #7c4f2a; }
+    .close-btn {
+      width: 30px; height: 30px;
+      border: none; background: #f5f0eb;
+      border-radius: 8px; font-size: 1.1rem;
+      cursor: pointer; color: #999;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .close-btn:hover { background: #ede5db; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .field label { font-size: 0.72rem; font-weight: 600; color: #999; letter-spacing: 0.03em; text-transform: uppercase; }
+    .field input {
+      padding: 10px 12px;
+      border: 1.5px solid #ede5db;
+      border-radius: 9px;
+      font-size: 0.87rem;
+      font-family: inherit;
+      color: #1a1209;
+      background: #fdfaf7;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field input::placeholder { color: #c8bdb0; }
+    .field input:focus {
+      border-color: #c49068;
+      box-shadow: 0 0 0 3px rgba(196,144,104,0.15);
+    }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .btn-cancel {
+      flex: 1; padding: 10px;
+      border: 1.5px solid #ede5db; border-radius: 9px;
+      background: transparent; color: #999;
+      font-size: 0.83rem; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-cancel:hover { background: #f7f4f0; }
+    .btn-save {
+      flex: 1; padding: 10px;
+      border: none; border-radius: 9px;
+      background: #7c4f2a; color: #fff;
+      font-size: 0.83rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .btn-save:hover { background: #6b4022; }
+
+    /* ── Animations ── */
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 500px) {
+      header { padding: 16px 18px; }
+      main   { padding: 24px 14px 48px; gap: 32px; }
+      .items-grid { grid-template-columns: repeat(2, 1fr); }
+      .modal { padding: 22px 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="header-icon">🏡</span>
+    <div>
+      <h1>My New Home Wishlist</h1>
+      <p>Help us build our dream home</p>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <!-- Modal -->
+  <div id="overlay" class="overlay hidden" onclick="closeOverlay(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Add Item</h2>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="item-form" onsubmit="saveItem(event)">
+        <div class="field">
+          <label>Name *</label>
+          <input type="text" id="f-name" placeholder="e.g. Sofa, Air Fryer…" required autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Price</label>
+          <input type="text" id="f-price" placeholder="e.g. ₹12,000" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Link</label>
+          <input type="text" id="f-link" placeholder="https://amazon.in/…" autocomplete="off" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const SECTIONS = [
+      { id: 'hall',       name: 'Hall',             icon: '🛋️' },
+      { id: 'kitchen',    name: 'Kitchen',           icon: '🍳' },
+      { id: 'bedroom',    name: 'Bedroom',           icon: '🛏️' },
+      { id: 'bathroom',   name: 'Bathroom',          icon: '🚿' },
+      { id: 'essentials', name: 'Basic Necessities', icon: '🧺' },
+    ];
+
+    let data = {};
+    let activeSection = null;
+    let activeEditId  = null;
+
+    function load() {
+      try { data = JSON.parse(localStorage.getItem('wishlist') || '{}'); } catch(_) {}
+      SECTIONS.forEach(s => { if (!data[s.id]) data[s.id] = []; });
+    }
+
+    function save() {
+      localStorage.setItem('wishlist', JSON.stringify(data));
+    }
+
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+
+    function esc(s) {
+      return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Render ──────────────────────────────────────────────────────────────
+
+    function render() {
+      document.getElementById('app').innerHTML = SECTIONS.map((s, i) => `
+        <div class="section-block" id="sec-${s.id}">
+          <div class="section-header">
+            <div class="section-label">
+              <div class="section-icon">${s.icon}</div>
+              <span class="section-name">${s.name}</span>
+            </div>
+            <button class="add-btn" onclick="openModal('${s.id}')" title="Add item">+</button>
+          </div>
+          <div class="items-grid" id="grid-${s.id}">
+            ${renderGrid(s.id)}
+          </div>
+        </div>
+        ${i < SECTIONS.length - 1 ? '<hr class="divider" />' : ''}
+      `).join('');
+    }
+
+    function renderGrid(id) {
+      const items = data[id] || [];
+      if (!items.length) return `<div class="empty">No items yet — hit <strong>+</strong> to add one</div>`;
+      return items.map(item => `
+        <div class="item-card" id="card-${item.id}">
+          <div class="item-name">${esc(item.name)}</div>
+          ${item.price ? `<div class="item-price">${esc(item.price)}</div>` : ''}
+          <div class="card-actions">
+            ${item.link
+              ? `<a href="${esc(item.link)}" target="_blank" rel="noopener" class="btn-view">🛒 View</a>`
+              : `<span class="btn-view no-link">No link</span>`}
+            <button class="btn-icon edit" onclick="openEdit('${id}','${item.id}')">✏️</button>
+            <button class="btn-icon del"  onclick="deleteItem('${id}','${item.id}')">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function refreshGrid(id) {
+      const el = document.getElementById('grid-' + id);
+      if (el) el.innerHTML = renderGrid(id);
+    }
+
+    // ── Modal ────────────────────────────────────────────────────────────────
+
+    function openModal(sectionId) {
+      activeSection = sectionId;
+      activeEditId  = null;
+      document.getElementById('modal-title').textContent = 'Add Item';
+      document.getElementById('f-name').value  = '';
+      document.getElementById('f-price').value = '';
+      document.getElementById('f-link').value  = '';
+      document.getElementById('overlay').classList.remove('hidden');
+      setTimeout(() => document.getElementById('f-name').focus(), 80);
+    }
+
+    function openEdit(sectionId, itemId) {
+      const item = (data[sectionId] || []).find(i => i.id === itemId);
+      if (!item) return;
+      activeSection = sectionId;
+      activeEditId  = itemId;
+      document.getElementById('modal-title').textContent = 'Edit Item';
+      document.getElementById('f-name').value  = item.name  || '';
+      document.getElementById('f-price').value = item.price || '';
+      document.getElementById('f-link').value  = item.link  || '';
+      document.getElementById('overlay').classList.remove('hidden');
+      setTimeout(() => document.getElementById('f-name').focus(), 80);
+    }
+
+    function closeModal() {
+      document.getElementById('overlay').classList.add('hidden');
+    }
+
+    function closeOverlay(e) {
+      if (e.target === document.getElementById('overlay')) closeModal();
+    }
+
+    function saveItem(e) {
+      e.preventDefault();
+      const name  = document.getElementById('f-name').value.trim();
+      const price = document.getElementById('f-price').value.trim();
+      const link  = document.getElementById('f-link').value.trim();
+
+      if (!name || !activeSection) return;
+
+      const item = { id: activeEditId || uid(), name, price, link };
+
+      if (activeEditId) {
+        const idx = (data[activeSection] || []).findIndex(i => i.id === activeEditId);
+        if (idx !== -1) data[activeSection][idx] = item;
+      } else {
+        data[activeSection].push(item);
+      }
+
+      save();
+      closeModal();
+      refreshGrid(activeSection);
+    }
+
+    function deleteItem(sectionId, itemId) {
+      data[sectionId] = (data[sectionId] || []).filter(i => i.id !== itemId);
+      save();
+      refreshGrid(sectionId);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    load();
+    render();
+  </script>
+</body>
+</html>
