@@ -197,6 +197,16 @@
     }
     .field input::placeholder { color: #c8bdb0; }
     .field input:focus { border-color: #c49068; box-shadow: 0 0 0 3px rgba(196,144,104,0.15); }
+    .field textarea {
+      padding: 10px 12px;
+      border: 1.5px solid #ede5db; border-radius: 9px;
+      font-size: 0.87rem; font-family: inherit; color: #1a1209;
+      background: #fdfaf7; outline: none; resize: vertical; min-height: 72px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field textarea::placeholder { color: #c8bdb0; }
+    .field textarea:focus { border-color: #c49068; box-shadow: 0 0 0 3px rgba(196,144,104,0.15); }
+    .item-notes { font-size: 0.78rem; color: #8a7060; line-height: 1.45; }
 
     .modal-actions { display: flex; gap: 10px; margin-top: 4px; }
     .btn-cancel {
@@ -276,6 +286,10 @@
         <div class="field">
           <label>Link</label>
           <input type="text" id="f-link" placeholder="https://amazon.in/…" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Notes</label>
+          <textarea id="f-notes" placeholder="Color, size, model, where to check…"></textarea>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -394,6 +408,7 @@
         <div class="item-card" id="card-${item.id}">
           <div class="item-name">${esc(item.name)}</div>
           ${item.price ? `<div class="item-price">${esc(item.price)}</div>` : ''}
+          ${item.notes ? `<div class="item-notes">${esc(item.notes)}</div>` : ''}
           <div class="card-actions">
             ${item.link
               ? `<a href="${esc(item.link)}" target="_blank" rel="noopener" class="btn-view">🛒 View</a>`
@@ -419,6 +434,7 @@
       document.getElementById('f-name').value  = '';
       document.getElementById('f-price').value = '';
       document.getElementById('f-link').value  = '';
+      document.getElementById('f-notes').value = '';
       document.getElementById('overlay').classList.remove('hidden');
       setTimeout(() => document.getElementById('f-name').focus(), 80);
     }
@@ -432,6 +448,7 @@
       document.getElementById('f-name').value  = item.name  || '';
       document.getElementById('f-price').value = item.price || '';
       document.getElementById('f-link').value  = item.link  || '';
+      document.getElementById('f-notes').value = item.notes || '';
       document.getElementById('overlay').classList.remove('hidden');
       setTimeout(() => document.getElementById('f-name').focus(), 80);
     }
@@ -451,6 +468,7 @@
       const name  = document.getElementById('f-name').value.trim();
       const price = document.getElementById('f-price').value.trim();
       const link  = document.getElementById('f-link').value.trim();
+      const notes = document.getElementById('f-notes').value.trim();
       if (!name || !activeSection) return;
 
       const saveBtn = document.getElementById('save-btn');
@@ -458,7 +476,7 @@
       saveBtn.textContent  = 'Saving…';
 
       const itemId = activeEditId || uid();
-      const payload = { name, price, link };
+      const payload = { name, price, link, notes };
 
       try {
         await fbSet(`${activeSection}/${itemId}`, payload);
