@@ -25,13 +25,21 @@
       gap: 14px;
     }
     .header-icon { font-size: 1.8rem; }
-    header h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #7c4f2a;
-      letter-spacing: -0.02em;
+    header h1 { font-size: 1.25rem; font-weight: 700; color: #7c4f2a; letter-spacing: -0.02em; }
+    header p  { font-size: 0.78rem; color: #b0a090; margin-top: 2px; }
+
+    /* ── Loading / status bar ── */
+    #status-bar {
+      text-align: center;
+      font-size: 0.78rem;
+      padding: 8px;
+      background: #fff8f2;
+      border-bottom: 1px solid #ede5db;
+      color: #b0a090;
+      display: none;
     }
-    header p { font-size: 0.78rem; color: #b0a090; margin-top: 2px; }
+    #status-bar.visible { display: block; }
+    #status-bar.error   { background: #fff2f2; color: #c0392b; border-color: #ffd5d5; }
 
     /* ── Page layout ── */
     main {
@@ -43,20 +51,25 @@
       gap: 44px;
     }
 
+    /* ── Loading skeleton ── */
+    .skeleton {
+      padding: 24px 20px;
+      border: 1.5px dashed #d9cec4;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #c0b0a0;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
     /* ── Section ── */
     .section-block { display: flex; flex-direction: column; gap: 18px; }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .section-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .section-header { display: flex; align-items: center; justify-content: space-between; }
+    .section-label  { display: flex; align-items: center; gap: 10px; }
     .section-icon {
       width: 38px; height: 38px;
       background: #f0e8df;
@@ -64,27 +77,19 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 1.15rem;
     }
-    .section-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #7c4f2a;
-      letter-spacing: -0.01em;
-    }
+    .section-name { font-size: 1.05rem; font-weight: 700; color: #7c4f2a; letter-spacing: -0.01em; }
 
     .add-btn {
       width: 34px; height: 34px;
-      border-radius: 9px;
-      border: none;
-      background: #7c4f2a;
-      color: #fff;
-      font-size: 1.3rem;
-      line-height: 1;
+      border-radius: 9px; border: none;
+      background: #7c4f2a; color: #fff;
+      font-size: 1.3rem; line-height: 1;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, transform 0.15s;
-      flex-shrink: 0;
     }
     .add-btn:hover { background: #6b4022; transform: scale(1.07); }
+    .add-btn:disabled { background: #ccc; cursor: default; transform: none; }
 
     /* ── Grid ── */
     .items-grid {
@@ -109,65 +114,44 @@
       border: 1px solid #ede5db;
       border-radius: 12px;
       padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      display: flex; flex-direction: column; gap: 6px;
       transition: transform 0.18s, box-shadow 0.18s;
       animation: popIn 0.22s ease-out;
     }
-    .item-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(124, 79, 42, 0.1);
-    }
+    .item-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(124,79,42,0.1); }
     .item-name  { font-size: 0.88rem; font-weight: 600; color: #1a1209; line-height: 1.35; }
     .item-price { font-size: 0.9rem;  font-weight: 700; color: #7c4f2a; }
 
-    .card-actions {
-      display: flex;
-      gap: 7px;
-      margin-top: 6px;
-      align-items: center;
-    }
+    .card-actions { display: flex; gap: 7px; margin-top: 6px; align-items: center; }
     .btn-view {
-      flex: 1;
-      padding: 7px 0;
-      background: #7c4f2a;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
+      flex: 1; padding: 7px 0;
+      background: #7c4f2a; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 0.72rem; font-weight: 600;
+      text-align: center; text-decoration: none;
       cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-      transition: background 0.15s;
-      font-family: inherit;
+      transition: background 0.15s; font-family: inherit;
     }
     .btn-view:hover { background: #6b4022; }
-    .btn-view.no-link {
-      background: #f0ece8;
-      color: #bbb;
-      cursor: default;
-    }
+    .btn-view.no-link { background: #f0ece8; color: #bbb; cursor: default; }
+
     .btn-icon {
       width: 30px; height: 30px;
       border: none; border-radius: 8px;
-      font-size: 0.75rem;
-      cursor: pointer;
+      font-size: 0.75rem; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s;
-      flex-shrink: 0;
+      transition: background 0.15s; flex-shrink: 0;
     }
-    .btn-icon.edit   { background: #f0e8df; }
+    .btn-icon.edit { background: #f0e8df; }
     .btn-icon.edit:hover { background: #e4d5c7; }
-    .btn-icon.del    { background: #fdf0f0; }
+    .btn-icon.del  { background: #fdf0f0; }
     .btn-icon.del:hover  { background: #fde0e0; }
 
     /* ── Divider ── */
     .divider { border: none; border-top: 1px solid #e8e0d8; }
 
-    /* ── Modal overlay ── */
+    /* ── Overlay ── */
     .overlay {
       position: fixed; inset: 0;
       background: rgba(26,18,9,0.4);
@@ -178,7 +162,7 @@
     }
     .overlay.hidden { display: none; }
 
-    /* ── Modal box ── */
+    /* ── Modal ── */
     .modal {
       background: #fff;
       border-radius: 18px;
@@ -206,20 +190,13 @@
     .field label { font-size: 0.72rem; font-weight: 600; color: #999; letter-spacing: 0.03em; text-transform: uppercase; }
     .field input {
       padding: 10px 12px;
-      border: 1.5px solid #ede5db;
-      border-radius: 9px;
-      font-size: 0.87rem;
-      font-family: inherit;
-      color: #1a1209;
-      background: #fdfaf7;
-      outline: none;
+      border: 1.5px solid #ede5db; border-radius: 9px;
+      font-size: 0.87rem; font-family: inherit; color: #1a1209;
+      background: #fdfaf7; outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
     .field input::placeholder { color: #c8bdb0; }
-    .field input:focus {
-      border-color: #c49068;
-      box-shadow: 0 0 0 3px rgba(196,144,104,0.15);
-    }
+    .field input:focus { border-color: #c49068; box-shadow: 0 0 0 3px rgba(196,144,104,0.15); }
 
     .modal-actions { display: flex; gap: 10px; margin-top: 4px; }
     .btn-cancel {
@@ -237,9 +214,10 @@
       background: #7c4f2a; color: #fff;
       font-size: 0.83rem; font-weight: 700;
       cursor: pointer; font-family: inherit;
-      transition: background 0.15s;
+      transition: background 0.15s, opacity 0.15s;
     }
-    .btn-save:hover { background: #6b4022; }
+    .btn-save:hover   { background: #6b4022; }
+    .btn-save:disabled { opacity: 0.5; cursor: default; }
 
     /* ── Animations ── */
     @keyframes popIn {
@@ -270,7 +248,14 @@
     </div>
   </header>
 
-  <main id="app"></main>
+  <div id="status-bar"></div>
+
+  <main id="app">
+    <!-- Skeleton shown while Firebase loads -->
+    <div id="loading-placeholder">
+      <div class="skeleton">Loading wishlist…</div>
+    </div>
+  </main>
 
   <!-- Modal -->
   <div id="overlay" class="overlay hidden" onclick="closeOverlay(event)">
@@ -294,13 +279,16 @@
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-          <button type="submit" class="btn-save">Save</button>
+          <button type="submit" class="btn-save" id="save-btn">Save</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
+    // ── Firebase config ───────────────────────────────────────────────────────
+    const DB = 'https://home-wishlist-5530b-default-rtdb.firebaseio.com/wishlist';
+
     const SECTIONS = [
       { id: 'hall',       name: 'Hall',             icon: '🛋️' },
       { id: 'kitchen',    name: 'Kitchen',           icon: '🍳' },
@@ -309,18 +297,9 @@
       { id: 'essentials', name: 'Basic Necessities', icon: '🧺' },
     ];
 
-    let data = {};
+    let data          = {};
     let activeSection = null;
     let activeEditId  = null;
-
-    function load() {
-      try { data = JSON.parse(localStorage.getItem('wishlist') || '{}'); } catch(_) {}
-      SECTIONS.forEach(s => { if (!data[s.id]) data[s.id] = []; });
-    }
-
-    function save() {
-      localStorage.setItem('wishlist', JSON.stringify(data));
-    }
 
     function uid() {
       return Date.now().toString(36) + Math.random().toString(36).slice(2);
@@ -330,7 +309,65 @@
       return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    // ── Render ──────────────────────────────────────────────────────────────
+    // ── Status bar ────────────────────────────────────────────────────────────
+
+    function showStatus(msg, isError = false) {
+      const bar = document.getElementById('status-bar');
+      bar.textContent = msg;
+      bar.className   = 'visible' + (isError ? ' error' : '');
+    }
+
+    function hideStatus() {
+      document.getElementById('status-bar').className = '';
+    }
+
+    // ── Firebase REST helpers ─────────────────────────────────────────────────
+
+    async function fbGet(path) {
+      const res = await fetch(`${DB}/${path}.json`);
+      if (!res.ok) throw new Error('Failed to read data');
+      return res.json();
+    }
+
+    async function fbSet(path, value) {
+      const res = await fetch(`${DB}/${path}.json`, {
+        method:  'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(value),
+      });
+      if (!res.ok) throw new Error('Failed to save data');
+      return res.json();
+    }
+
+    async function fbDelete(path) {
+      const res = await fetch(`${DB}/${path}.json`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete item');
+    }
+
+    // ── Load all data from Firebase ───────────────────────────────────────────
+
+    async function loadFromFirebase() {
+      showStatus('Loading…');
+      try {
+        const remote = await fbGet('');
+        SECTIONS.forEach(s => {
+          const section = (remote && remote[s.id]) || {};
+          // Convert Firebase object → array, skip the _initialized placeholder
+          data[s.id] = Object.entries(section)
+            .filter(([k, v]) => k !== '_initialized' && v && typeof v === 'object')
+            .map(([id, item]) => ({ id, ...item }));
+        });
+        hideStatus();
+      } catch (e) {
+        showStatus('Could not connect to database. Check your connection.', true);
+        SECTIONS.forEach(s => { data[s.id] = []; });
+      }
+
+      document.getElementById('loading-placeholder').remove();
+      render();
+    }
+
+    // ── Render ────────────────────────────────────────────────────────────────
 
     function render() {
       document.getElementById('app').innerHTML = SECTIONS.map((s, i) => `
@@ -373,7 +410,7 @@
       if (el) el.innerHTML = renderGrid(id);
     }
 
-    // ── Modal ────────────────────────────────────────────────────────────────
+    // ── Modal ─────────────────────────────────────────────────────────────────
 
     function openModal(sectionId) {
       activeSection = sectionId;
@@ -407,40 +444,68 @@
       if (e.target === document.getElementById('overlay')) closeModal();
     }
 
-    function saveItem(e) {
+    // ── Save item → Firebase ──────────────────────────────────────────────────
+
+    async function saveItem(e) {
       e.preventDefault();
       const name  = document.getElementById('f-name').value.trim();
       const price = document.getElementById('f-price').value.trim();
       const link  = document.getElementById('f-link').value.trim();
-
       if (!name || !activeSection) return;
 
-      const item = { id: activeEditId || uid(), name, price, link };
+      const saveBtn = document.getElementById('save-btn');
+      saveBtn.disabled     = true;
+      saveBtn.textContent  = 'Saving…';
 
-      if (activeEditId) {
-        const idx = (data[activeSection] || []).findIndex(i => i.id === activeEditId);
-        if (idx !== -1) data[activeSection][idx] = item;
-      } else {
-        data[activeSection].push(item);
+      const itemId = activeEditId || uid();
+      const payload = { name, price, link };
+
+      try {
+        await fbSet(`${activeSection}/${itemId}`, payload);
+
+        const item = { id: itemId, ...payload };
+        if (activeEditId) {
+          const idx = data[activeSection].findIndex(i => i.id === activeEditId);
+          if (idx !== -1) data[activeSection][idx] = item;
+        } else {
+          data[activeSection].push(item);
+        }
+
+        closeModal();
+        refreshGrid(activeSection);
+      } catch (_) {
+        showStatus('Could not save. Check your connection.', true);
+        setTimeout(hideStatus, 3000);
+      } finally {
+        saveBtn.disabled    = false;
+        saveBtn.textContent = 'Save';
       }
-
-      save();
-      closeModal();
-      refreshGrid(activeSection);
     }
 
-    function deleteItem(sectionId, itemId) {
+    // ── Delete item → Firebase ────────────────────────────────────────────────
+
+    async function deleteItem(sectionId, itemId) {
+      // Optimistic: remove from UI immediately
       data[sectionId] = (data[sectionId] || []).filter(i => i.id !== itemId);
-      save();
       refreshGrid(sectionId);
+
+      try {
+        await fbDelete(`${sectionId}/${itemId}`);
+      } catch (_) {
+        showStatus('Delete failed. Refreshing…', true);
+        setTimeout(() => { hideStatus(); loadFromFirebase(); }, 2000);
+      }
     }
+
+    // ── Keyboard ──────────────────────────────────────────────────────────────
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeModal();
     });
 
-    load();
-    render();
+    // ── Init ──────────────────────────────────────────────────────────────────
+
+    loadFromFirebase();
   </script>
 </body>
 </html>
